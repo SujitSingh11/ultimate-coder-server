@@ -6,7 +6,14 @@ const ucQuestions = require("../models/uc_question_model");
 ucQuizRouter.get("/quiz", async (req, res) => {
   try {
     try {
-      const questions = (await ucQuestions.find()).map((question) => {
+      const questions = (
+        await ucQuestions.find(
+          {},
+          {
+            correct_option: 0,
+          }
+        )
+      ).map((question) => {
         return question;
       });
       return res.status(200).send(questions);
@@ -18,8 +25,26 @@ ucQuizRouter.get("/quiz", async (req, res) => {
   }
 });
 
-ucQuizRouter.post("/submit", (req, res) => {
+ucQuizRouter.post("/submit", async (req, res) => {
   try {
+    let total_mark = 0;
+    const question_ids = req.body.question_ids;
+    const selected_options = req.body.selected_options;
+    for (let index = 0; index < question_ids.length; index++) {
+      let question_id = question_ids[index];
+      let selected_option = selected_options[index];
+      let question_validate = await ucQuestions
+        .findById({ _id: question_id })
+        .then((doc) => {
+          return doc;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      if (selected_option == question_validate.correct_option) {
+        total_mark += question_validate.mark;
+      }
+    }
     return res.status(200).send(req.body);
   } catch (error) {
     return res.status(500).send(error);
