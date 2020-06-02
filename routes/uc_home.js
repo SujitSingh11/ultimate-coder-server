@@ -3,8 +3,8 @@ const homeRouter = express.Router();
 const Joi = require("@hapi/joi");
 
 // Routes
-homeRouter.get("/api/start", (req, res) => {
-  res.send("We are home!");
+homeRouter.post("/start", (req, res) => {
+  res.status(200).send(req);
 });
 
 // Export Route

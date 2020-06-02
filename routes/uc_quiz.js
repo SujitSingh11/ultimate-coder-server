@@ -28,12 +28,15 @@ ucQuizRouter.get("/quiz", async (req, res) => {
 ucQuizRouter.post("/submit", async (req, res) => {
   try {
     let total_mark = 0;
+    let question_id;
+    let selected_option;
+    let question_validate;
     const question_ids = req.body.question_ids;
     const selected_options = req.body.selected_options;
     for (let index = 0; index < question_ids.length; index++) {
-      let question_id = question_ids[index];
-      let selected_option = selected_options[index];
-      let question_validate = await ucQuestions
+      question_id = question_ids[index];
+      selected_option = selected_options[index];
+      question_validate = await ucQuestions
         .findById({ _id: question_id })
         .then((doc) => {
           return doc;
