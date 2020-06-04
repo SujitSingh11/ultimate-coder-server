@@ -48,7 +48,7 @@ ucQuizRouter.post("/submit", async (req, res) => {
         total_mark += question_validate.mark;
       }
     }
-    return res.status(200).send(req.body);
+    return res.status(200).send({ total_mark });
   } catch (error) {
     return res.status(500).send(error);
   }
